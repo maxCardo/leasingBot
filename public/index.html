@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <title>Chatbot UI</title>
+  </head>
+  <body>
+
+    <div class="container" id="main">
+      <div id="userFormArea"class="row">
+        <div class="col-md-12">
+          <form id="userForm">
+            <div class="form-group">
+              <label>Enter Username</label>
+              <input type="text" class="form-control" id="username" value="">
+              <br>
+              <input type="submit" class="btn btn-primary" value="Login">
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="messageArea"  class="row">
+        <!-- side bar with chats area -->
+        <div class="col-md-4" id="sidebar">
+          <div class="well" id="innerSidebar">
+            <h3>Online Users</h3>
+            <ul class="listGroup" id="users"></ul>
+          </div>
+        </div>
+        <!--messages and input area  -->
+        <div class="col-md-8" style="height: 100%">
+          <!--posted messages  -->
+          <div class="chat" id="chat" style="height: 80%;"></div>
+
+          <!-- message input area -->
+          <form id="messageForm" style="height: 20%">
+            <div class="form-group">
+              <label>Enter Message</label>
+              <textarea class="form-control" id="message" autofocus></textarea>
+              <br>
+              <p id="messageError">Please enter a message</p>
+              <input type="submit" id="sendMessageBtn" class="btn btn-primary" value="Send Message">
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+
+    </script>
+    <script src="./main.js" charset="utf-8"></script>
+  </body>
+</html>
