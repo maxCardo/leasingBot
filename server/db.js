@@ -15,7 +15,7 @@ const getAllChats = () => {
       return console.log('Error: problem connecting to mongoDB getVendor');
       }
       const db = client.db(dbName);
-      db.collection('chats').find({}).toArray((err, res) => {
+      db.collection('chats').find({}).sort({last_active:-1}).toArray((err, res) => {
         if (err) throw err;
         resolve(res);
       })
@@ -63,6 +63,11 @@ const updateChat = (id, record, from) => {
       db.collection('chats').findOneAndUpdate({
         name: id
       },{
+        $set:{
+          unread: true,
+          botRespond:false,
+          last_active:new Date
+        },
         $push: {
           chats: {
             from: from,
@@ -88,7 +93,7 @@ const getChat = (id) => {
       return console.log('Error: problem connecting to mongoDB getVendor');
       }
       const db = client.db(dbName);
-      db.collection('chats').findOne({'name':id}).then((value) => {
+      db.collection('chats').findOneAndUpdate({'name':id},{$set:{unread:false}}).then((value) => {
         resolve(value);
       })
     })

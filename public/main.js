@@ -54,7 +54,11 @@ $(function () {
   socket.on('Convo Bar', (data) => {
     var html = '';
     for (var i = 0; i < data.length; i++) {
-      html += `<li id="convo" class="list-group-item">${data[i].name}</li>`;
+      let unread = '';
+      if (data[i].unread === true) {
+        unread = 'style= "font-weight: bold";'
+      }
+      html += `<li id="convo" class="list-group-item" ${unread}>${data[i].name}</li>`;
     };
     $users.html(html);
 
@@ -63,8 +67,8 @@ $(function () {
   //switched emit on botRespond to 'post refresh'
 
   socket.on('load convo', (data) => {
-    $('#chatDetails').html(data.name)
-    const chat = data.chats;
+    $('#chatDetails').html(data.value.name)
+    const chat = data.value.chats;
     for (var i = 0; i < chat.length; i++) {
       $chat.append(`<div id = "messageDiv" class="well"><strong>${chat[i].from}:</strong><br/>${chat[i].message}</div>`);
       scrollToBottom();
@@ -79,7 +83,7 @@ $(function () {
   })
 
   socket.on('post refresh', (data) => {
-    const chat = data.chats;
+    const chat = data.value.chats;
     $chat.append(`<div id = "messageDiv" class="well"><strong>${chat[chat.length-1].from}:</strong><br/>${chat[chat.length-1].message}</div>`);
     scrollToBottom();
   })

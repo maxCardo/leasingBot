@@ -87,6 +87,7 @@ io.sockets.on('connection', (socket) => {
   socket.on('get convo', (id) => {
     db.getChat(id).then((record) => {
       socket.username = record.name;
+      db.getAllChats().then((chats) => updateConvoBar(chats));
       io.sockets.emit('load convo', record);
     })
   })
