@@ -60,18 +60,41 @@ $(function () {
 
   });
 
-  socket.on('bot message', (data) => {
-    $chat.append(`<div id="messageDiv" class="well"><strong>${data.user}:</strong><br/>${data.msg}</div>`);
-    scrollToBottom();
-  })
+  //switched emit on botRespond to 'post refresh'
 
   socket.on('load convo', (data) => {
+    $('#chatDetails').html(data.name)
     const chat = data.chats;
     for (var i = 0; i < chat.length; i++) {
       $chat.append(`<div id = "messageDiv" class="well"><strong>${chat[i].from}:</strong><br/>${chat[i].message}</div>`);
       scrollToBottom();
     }
   })
+
+  socket.on('refresh chat', (record) => {
+    const openChat = $('#chatDetails')[0].innerHTML;
+    if (openChat === record) {
+      socket.emit('get chat', openChat);
+    }
+  })
+
+  socket.on('post refresh', (data) => {
+    const chat = data.chats;
+    $chat.append(`<div id = "messageDiv" class="well"><strong>${chat[chat.length-1].from}:</strong><br/>${chat[chat.length-1].message}</div>`);
+    scrollToBottom();
+  })
+
+  socket.on('bot refresh', (data) => {
+    const openChat = $('#chatDetails')[0].innerHTML;
+    if (openChat === data.chat) {
+      //socket.emit('get chat', openChat);
+      $chat.append(`<div id="messageDiv" class="well"><strong>${data.user}:</strong><br/>${data.msg}</div>`);
+      scrollToBottom();
+    }else {
+      console.log('chat not active');
+    }
+  })
+
 });
 
 // Auto scroll to bottom of page when messages are submited

@@ -14,7 +14,6 @@ const getAllChats = () => {
       if (err) {
       return console.log('Error: problem connecting to mongoDB getVendor');
       }
-      console.log('connected to mongoDB');
       const db = client.db(dbName);
       db.collection('chats').find({}).toArray((err, res) => {
         if (err) throw err;
@@ -59,7 +58,6 @@ const updateChat = (id, record, from) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB');
       }
-      console.log('connected to mongoDB');
       const db = client.db(dbName);
 
       db.collection('chats').findOneAndUpdate({
@@ -77,10 +75,9 @@ const updateChat = (id, record, from) => {
         returnNewDocument:true,
         returnOriginal: false
       }).then((res) => {
-        console.log('Record updated');
-      })
-      client.close();
+      });
     });
+    resolve();
   });
 };
 
@@ -90,9 +87,7 @@ const getChat = (id) => {
       if (err) {
       return console.log('Error: problem connecting to mongoDB getVendor');
       }
-      console.log('connected to mongoDB');
       const db = client.db(dbName);
-      console.log('id: ', id);
       db.collection('chats').findOne({'name':id}).then((value) => {
         resolve(value);
       })

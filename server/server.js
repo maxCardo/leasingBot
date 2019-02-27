@@ -21,6 +21,8 @@ app.use(bodyParser.urlencoded({
 users =[];
 connections =[];
 
+//------------------------------ Routs -------------------------------------//
+
 app.get('/' , (req, res) => {
   db.getAllChats().then((convos) => {
     res.sendFile(publicPath + '/index.html');
@@ -31,13 +33,18 @@ app.get('/' , (req, res) => {
 
 app.post('/sms', (req,res) => {
   const data = req.body;
-  io.sockets.emit('new message', {msg: data.Body , user:data.From});
-  db.updateChat(data.From, data.Body, 'userSMS');
-  // TODO: return record from db then emit message with user name
-  const response = botRespond(data.Body, data.From);
-  sms.sendSMS(data.From, response);
-  res.status(200).send();
-})
+  db.updateChat(data.From, data.Body, 'userSMS').then(() => {
+    io.sockets.emit('refresh chat', data.From);
+  }).then(() => {
+    //update convo bar
+    db.getAllChats().then((chats) => updateConvoBar(chats));
+    //send bot response
+    const response = botRespond(data.Body, data.From);
+    //sms.sendSMS(data.From, response);
+    res.status(200).send()
+  })
+
+});
 
 //------------------------------ Sockets.on -------------------------------------//
 
@@ -71,7 +78,7 @@ io.sockets.on('connection', (socket) => {
       // TODO:  toggle off bot
       sms.sendSMS(chat.name, data);
     }).then(() => {
-      io.sockets.emit('new message', {msg: data, user: 'Manager'});
+      //io.sockets.emit('new message', {msg: data, user: 'Manager'});
       db.updateChat(socket.username, data, 'Manager');
     });
   });
@@ -80,8 +87,13 @@ io.sockets.on('connection', (socket) => {
   socket.on('get convo', (id) => {
     db.getChat(id).then((record) => {
       socket.username = record.name;
-      console.log('record: ', record);
       io.sockets.emit('load convo', record);
+    })
+  })
+
+  socket.on('get chat', (id) => {
+    db.getChat(id).then((record) => {;
+      io.sockets.emit('post refresh', record);
     })
   })
 
@@ -89,6 +101,17 @@ io.sockets.on('connection', (socket) => {
   // function updateUserNames() {
   //   io.sockets.emit('get users', users);
   // };
+  //
+  // const updateMainChat = () => {
+  //   //if active socket on main chat. update main chat
+  //   console.log('running updateMainChat');
+  //   if (socket.username) {
+  //     db.getChat(socket.username).then((record) => {
+  //       console.log('got chat for :', socket.username);
+  //       io.sockets.emit('load convo', record);
+  //     })
+  //   }
+  // }
 
 });
 
@@ -104,7 +127,7 @@ const botRespond = async (text, user) => {
   let responseObj = await bot.textQuery(text);
   let response = responseObj[0].queryResult.fulfillmentText;
   db.updateChat(user, response, 'Tara')
-  io.sockets.emit('bot message', {msg: response , user:'Tara'});
+  io.sockets.emit('bot refresh', {chat:user ,msg: response , user:'Tara'});
   return response;
 };
 
