@@ -49,3 +49,7 @@ html, body{
 #convo{
   cursor: pointer;
 }
+
+#timeStamp{
+  float: right;
+}

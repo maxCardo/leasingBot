@@ -5,7 +5,42 @@ const dataBase = process.env.MONGODB_URI;
 const databaseUrlSplit = dataBase.split('/');
 const dbName = databaseUrlSplit[3];
 
-console.log('dbname: ',dbName);
+
+
+const updateChat = (id, record, from) => {
+  return new Promise(function(resolve, reject) {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB');
+      }
+      const db = client.db(dbName);
+    
+      db.collection('chats').findOneAndUpdate({
+        name: id
+      },{
+        $set:{
+          unread: true,
+          botRespond:false,
+          last_active:new Date
+        },
+        $push: {
+          chats: {
+            from: from,
+            message:record,
+            Date: new Date
+          },
+        }
+      },{
+        upsert:true,
+        returnNewDocument:true,
+        returnOriginal: false
+      }).then((res) => {
+        resolve();
+      });
+    });
+    //resolve();
+  });
+};
 
 //grab all chats for sidebar on load
 const getAllChats = () => {
@@ -52,39 +87,6 @@ const newChat = (record) => {
   });
 }
 
-const updateChat = (id, record, from) => {
-  return new Promise(function(resolve, reject) {
-    MongoClient.connect(dataBase, (err, client) => {
-      if (err) {
-        return console.log('Error: problem connecting to mongoDB');
-      }
-      const db = client.db(dbName);
-
-      db.collection('chats').findOneAndUpdate({
-        name: id
-      },{
-        $set:{
-          unread: true,
-          botRespond:false,
-          last_active:new Date
-        },
-        $push: {
-          chats: {
-            from: from,
-            message:record,
-            Date: new Date
-          },
-        }
-      },{
-        upsert:true,
-        returnNewDocument:true,
-        returnOriginal: false
-      }).then((res) => {
-      });
-    });
-    resolve();
-  });
-};
 
 const getChat = (id) => {
   return new Promise((resolve, reject) => {

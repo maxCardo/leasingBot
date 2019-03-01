@@ -1,9 +1,10 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+
 const app = express();
 const server = require('http').createServer(app);
-const path = require('path');
 const io = require('socket.io').listen(server);
-const bodyParser = require('body-parser');
 
 const bot = require('./assets/bot')
 const db = require('./db');
@@ -23,27 +24,21 @@ connections =[];
 
 //------------------------------ Routs -------------------------------------//
 
-app.get('/' , (req, res) => {
-  db.getAllChats().then((convos) => {
-    res.sendFile(publicPath + '/index.html');
-    return convos
-  }).then((convos) => updateConvoBar(convos));
+// app.get('/' , (req, res) => {
+//   db.getAllChats().then((convos) => {
+//     res.sendFile(publicPath + '/index.html');
+//     return convos
+//   }).then((convos) => updateConvoBar(convos));
+//
+// });
 
-});
 
-app.post('/sms', (req,res) => {
+app.post('/sms', async (req, res) => {
   const data = req.body;
-  db.updateChat(data.From, data.Body, 'userSMS').then(() => {
-    io.sockets.emit('refresh chat', data.From);
-  }).then(() => {
-    //update convo bar
-    db.getAllChats().then((chats) => updateConvoBar(chats));
-    //send bot response
-    const response = botRespond(data.Body, data.From);
-    //sms.sendSMS(data.From, response);
-    res.status(200).send()
-  })
-
+  await updateChat(data.From, data.Body, 'User-SMS');
+  // updateConvoBar();
+  // botRespond(data.Body, data.From);
+   res.status(200).send();
 });
 
 //------------------------------ Sockets.on -------------------------------------//
@@ -62,14 +57,7 @@ io.sockets.on('connection', (socket) => {
     console.log('Disconnected: %s sockets connected' , connections.length);
   });
 
-  // //add user (not used for UI deployment)
-  // socket.on('new user', (data, callback) => {
-  //   callback(true);
-  //   db.newChat(data)
-  //   socket.username = data.name;
-  //   users.push(socket.username);
-  //   updateUserNames();
-  // });
+
 
   //send messages: on UI deployment this sends message from the UI as "manager" when bot is overridden
   socket.on('send message', (data) => {
@@ -93,9 +81,9 @@ io.sockets.on('connection', (socket) => {
   })
 
   socket.on('get chat', (id) => {
-    db.getChat(id).then((record) => {;
+    db.getChat(id).then((record) => {
       io.sockets.emit('post refresh', record);
-    })
+    });
   })
 
   // // updates sidebar user names. not used on UI/sms deployment
@@ -119,17 +107,29 @@ io.sockets.on('connection', (socket) => {
 //------------------------------ Suport Functions -----------------------------//
 
 
-function updateConvoBar(data) {
-  io.sockets.emit('Convo Bar', data);
+
+const updateChat = (id, record, from) => {
+  db.updateChat(id, record, from ).then(() => {
+    io.sockets.emit('refresh chat', id);
+  });
 };
 
+const updateConvoBar = () => {
+  db.getAllChats().then((chats) => {
+    io.sockets.emit('Convo Bar', chats);;
+  });
+};
 
-const botRespond = async (text, user) => {
-  let responseObj = await bot.textQuery(text);
-  let response = responseObj[0].queryResult.fulfillmentText;
-  db.updateChat(user, response, 'Tara')
-  io.sockets.emit('bot refresh', {chat:user ,msg: response , user:'Tara'});
-  return response;
+const botRespond = (text, user) => {
+  setTimeout(() => {
+    const delay = 5000;
+    let responseObj = bot.textQuery(text);
+    let response = responseObj[0].queryResult.fulfillmentText;
+    db.updateChat(user, response, 'Tara').then(() => {
+      io.sockets.emit('bot refresh', {chat:user ,msg: response , user:'Tara'});
+      sms.sendSMS(data.From, response);
+    }, delay);
+  });
 };
 
 //------------------------------- deployment -------------------------------//
