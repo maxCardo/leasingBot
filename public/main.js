@@ -1,29 +1,44 @@
 
 var socket = io.connect();
+var $messageForm = $('#messageForm');
+var $messageArea = $('#messageArea');
+var $message = $('#message');
+var $chat = $('#chat');
+var $userFormArea = $('#userFormArea');
+var $userForm = $('#userForm');
+var $users = $('#users');
+var $username = $('#username');
 
 //--------------------------- Scoket IO Functions -----------------------------//
 $(function () {
-  var $messageForm = $('#messageForm');
-  var $messageArea = $('#messageArea');
-  var $message = $('#message');
-  var $chat = $('#chat');
-  var $userFormArea = $('#userFormArea');
-  var $userForm = $('#userForm');
-  var $users = $('#users');
-  var $username = $('#username');
 
-  socket.on('refresh chat', (id) => {
+  socket.on('refresh chat', (data) => {
     const openChat = $('#chatDetails')[0].innerHTML;
-    if (openChat === record) {
-      socket.emit('get chat', openChat);
-    }
-  })
+    if (openChat === data.num) {
+      postRerfreshChat(data.user, data.msg);
+      scrollToBottom();
+    }else {
+      console.log('chat not active');
+    };
+  });
+
+  socket.on('Convo Bar', (data) => {
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+      let unread = '';
+      if (data[i].unread === true) {
+        unread = 'style= "font-weight: bold";'
+      }
+      html += `<li id="convo" class="list-group-item" ${unread}>${data[i].name}</li>`;
+    };
+    $users.html(html);
+
+  });
 
   socket.on('bot refresh', (data) => {
     const openChat = $('#chatDetails')[0].innerHTML;
     if (openChat === data.chat) {
-      let time = moment(new Date).format('dddd MMM Do @ h:mm a');
-      $chat.append(`<div id="messageDiv" class="well"><strong>${data.user}:</strong><br/>${data.msg}<span id="timeStamp">${time}</span></div>`);
+      postRerfreshChat(data.user, data.msg);
       scrollToBottom();
     }else {
       console.log('chat not active');
@@ -68,18 +83,6 @@ $(function () {
     $users.html(html);
   });
 
-  socket.on('Convo Bar', (data) => {
-    var html = '';
-    for (var i = 0; i < data.length; i++) {
-      let unread = '';
-      if (data[i].unread === true) {
-        unread = 'style= "font-weight: bold";'
-      }
-      html += `<li id="convo" class="list-group-item" ${unread}>${data[i].name}</li>`;
-    };
-    $users.html(html);
-
-  });
 
   //switched emit on botRespond to 'post refresh'
 
@@ -121,6 +124,11 @@ function scrollToBottom() {
   if (clientHeight + scrollTop +newMessageHeight+lastMessageHeight >= scrollHeight) {
     messages.scrollTop(scrollHeight);
   }
+}
+
+const postRerfreshChat = (user,msg) => {
+  let time = moment(new Date).format('dddd MMM Do @ h:mm a');;
+  return $chat.append(`<div id="messageDiv" class="well"><strong>${user}:</strong><br/>${msg}<span id="timeStamp">${time}</span></div>`)
 }
 
 //-----------------------------event listners----------------------------------//

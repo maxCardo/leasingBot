@@ -14,7 +14,7 @@ const updateChat = (id, record, from) => {
         return console.log('Error: problem connecting to mongoDB');
       }
       const db = client.db(dbName);
-    
+
       db.collection('chats').findOneAndUpdate({
         name: id
       },{
@@ -54,7 +54,6 @@ const getAllChats = () => {
         if (err) throw err;
         resolve(res);
       })
-
     })
   });
 }

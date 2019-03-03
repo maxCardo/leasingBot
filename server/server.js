@@ -14,9 +14,7 @@ const publicPath = path.join(__dirname, '../public');
 
 app.use(express.static(publicPath));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
+app.use(bodyParser.urlencoded({extended: false}));
 
 
 users =[];
@@ -36,9 +34,10 @@ connections =[];
 app.post('/sms', async (req, res) => {
   const data = req.body;
   await updateChat(data.From, data.Body, 'User-SMS');
-  // updateConvoBar();
-  // botRespond(data.Body, data.From);
-   res.status(200).send();
+  updateConvoBar();
+  botRespond(data.Body, data.From);
+  await console.log('sending status');
+  res.status(200).send();
 });
 
 //------------------------------ Sockets.on -------------------------------------//
@@ -108,9 +107,9 @@ io.sockets.on('connection', (socket) => {
 
 
 
-const updateChat = (id, record, from) => {
-  db.updateChat(id, record, from ).then(() => {
-    io.sockets.emit('refresh chat', id);
+const updateChat = (number, message, user) => {
+  db.updateChat(number, message, user ).then(() => {
+    io.sockets.emit('refresh chat', {num:number, msg:message, user:user});
   });
 };
 
@@ -120,14 +119,15 @@ const updateConvoBar = () => {
   });
 };
 
-const botRespond = (text, user) => {
-  setTimeout(() => {
-    const delay = 5000;
-    let responseObj = bot.textQuery(text);
-    let response = responseObj[0].queryResult.fulfillmentText;
-    db.updateChat(user, response, 'Tara').then(() => {
-      io.sockets.emit('bot refresh', {chat:user ,msg: response , user:'Tara'});
-      sms.sendSMS(data.From, response);
+const botRespond = async(text, number) => {
+  const delayArr = [5000,6000,7000,8000, 5500, 6500, 7500, 8500]
+  const delay = delayArr[Math.floor(Math.random()*7)];
+  let responseObj = await bot.textQuery(text);
+  let response =  responseObj[0].queryResult.fulfillmentText;
+  db.updateChat(number, response, 'Tara').then(() => {
+    setTimeout(() => {
+      io.sockets.emit('refresh chat', {num:number ,msg: response , user:'Tara'});
+      sms.sendSMS(number, response);
     }, delay);
   });
 };
