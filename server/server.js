@@ -22,15 +22,6 @@ connections =[];
 
 //------------------------------ Routs -------------------------------------//
 
-// app.get('/' , (req, res) => {
-//   db.getAllChats().then((convos) => {
-//     res.sendFile(publicPath + '/index.html');
-//     return convos
-//   }).then((convos) => updateConvoBar(convos));
-//
-// });
-
-
 app.post('/sms', async (req, res) => {
   const data = req.body;
   await updateChat(data.From, data.Body, 'User-SMS');
@@ -43,7 +34,6 @@ app.post('/sms', async (req, res) => {
 //------------------------------ Sockets.on -------------------------------------//
 
 io.sockets.on('connection', (socket) => {
-  //connect UI, loads all chats into the sidebar chat list
   connections.push(socket);
   console.log('conected %s sockets connected', connections.length);
   db.getAllChats().then((chats) => updateConvoBar(chats));
@@ -59,15 +49,10 @@ io.sockets.on('connection', (socket) => {
 
 
   //send messages: on UI deployment this sends message from the UI as "manager" when bot is overridden
-  socket.on('send message', (data) => {
-    db.getChat(socket.username).then((chat) => {
-      // TODO: change below to user.num
-      // TODO:  toggle off bot
-      sms.sendSMS(chat.name, data);
-    }).then(() => {
-      //io.sockets.emit('new message', {msg: data, user: 'Manager'});
-      db.updateChat(socket.username, data, 'Manager');
-    });
+  socket.on('send message', (message, number) => {
+    updateChat(number, message, 'Admin');
+    sms.sendSMS(number, message);
+    console.log('sending admin message');
   });
 
   //loads main chat when selected from sidebar chats list

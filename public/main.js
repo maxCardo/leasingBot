@@ -47,8 +47,10 @@ $(function () {
 
   $messageForm.submit((e) => {
     e.preventDefault();
+    const openChat = $('#chatDetails')[0].innerHTML;
     if ($message.val()) {
-      socket.emit('send message', $message.val());
+      console.log(openChat);
+      socket.emit('send message', $message.val(), openChat);
       $message.val('');
     }else {
       $('#messageError').show()
@@ -148,7 +150,11 @@ $(document).ready(() => {
   $('#users').on('click','#convo', (e) => {
     socket.emit('get convo', e.currentTarget.innerHTML);
     $('#chat').empty();
-    //$('#messageDiv').remove();
+  });
+
+  $('#botBtn').on('click', () => {
+    const openChat = $('#chatDetails')[0].innerHTML;
+    console.log('botBtn hit', openChat);
   });
 
 });
