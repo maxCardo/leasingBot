@@ -21,6 +21,11 @@ users =[];
 connections =[];
 
 //------------------------------ Routs -------------------------------------//
+//Lead coming in from gmail email parse
+app.post('/newLead', (req, res) => {
+  console.log(req.body);
+  res.status(200).send();
+});
 
 app.post('/sms', async (req, res) => {
   const data = req.body;
