@@ -25,6 +25,7 @@ connections =[];
 app.post('/newLead', (req, res) => {
   db.newLead(req.body).then((value) => {
     sms.sendFirstSMS(value.value);
+    updateConvoBar();
   });
   res.status(200).send();
 });
@@ -34,7 +35,6 @@ app.post('/sms', async (req, res) => {
   await updateChat(data.From, data.Body, 'User-SMS');
   updateConvoBar();
   botRespond(data.Body, data.From);
-  await console.log('sending status');
   res.status(200).send();
 });
 
@@ -65,8 +65,9 @@ io.sockets.on('connection', (socket) => {
   //loads main chat when selected from sidebar chats list
   socket.on('get convo', (id) => {
     db.getChat(id).then((record) => {
-      socket.username = record.name;
-      db.getAllChats().then((chats) => updateConvoBar(chats));
+      socket.username = record.phoneNumber;
+      updateConvoBar();
+      console.log('load convo record: ', record);
       io.sockets.emit('load convo', record);
     })
   })

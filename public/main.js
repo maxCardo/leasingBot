@@ -14,7 +14,7 @@ $(function () {
 
   socket.on('refresh chat', (data) => {
     const openChat = $('#chatDetails')[0].innerHTML;
-    if (openChat === data.num) {
+    if (openChat === data.phoneNumber) {
       postRerfreshChat(data.user, data.msg);
       scrollToBottom();
     }else {
@@ -29,7 +29,7 @@ $(function () {
       if (data[i].unread === true) {
         unread = 'style= "font-weight: bold";'
       }
-      html += `<li id="convo" class="list-group-item" ${unread}>${data[i].name}</li>`;
+      html += `<li id="convo" class="list-group-item" ${unread}>${data[i].phoneNumber}</li>`;
     };
     $users.html(html);
 
@@ -89,7 +89,7 @@ $(function () {
   //switched emit on botRespond to 'post refresh'
 
   socket.on('load convo', (data) => {
-    $('#chatDetails').html(data.value.name)
+    $('#chatDetails').html(data.value.phoneNumber)
     const chat = data.value.chats;
     for (var i = 0; i < chat.length; i++) {
       let time = moment(chat[i].Date).format('dddd MMM Do @ h:mm a');
@@ -143,15 +143,19 @@ $(document).ready(() => {
     }
   });
 
+  // remove error message when newly entering message in text area
   $('#message').keypress(function (e) {
     $('#messageError').hide()
   });
 
+  // select chat from sidebar and display on main div
   $('#users').on('click','#convo', (e) => {
+    console.log('selected');
     socket.emit('get convo', e.currentTarget.innerHTML);
     $('#chat').empty();
   });
 
+  // not wired yet: chat bot on/off handeler.
   $('#botBtn').on('click', () => {
     const openChat = $('#chatDetails')[0].innerHTML;
     console.log('botBtn hit', openChat);

@@ -28,6 +28,11 @@ const newLead = (record) => {
             action:'emailParse lead',
             date:new Date(),
           },
+          chats: {
+            from: 'Admin',
+            message: 'Inquired on ILS',
+            Date: new Date
+          },
         }
       },{
         upsert:true,
@@ -92,6 +97,20 @@ const getAllChats = () => {
   });
 }
 
+const getChat = (id) => {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB getVendor');
+      }
+      const db = client.db(dbName);
+      db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{unread:false}}).then((value) => {
+        resolve(value);
+      })
+    })
+  });
+}
+
 //create new chat
 const newChat = (record) => {
   return new Promise(function(resolve, reject) {
@@ -120,20 +139,6 @@ const newChat = (record) => {
   });
 }
 
-
-const getChat = (id) => {
-  return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
-      if (err) {
-      return console.log('Error: problem connecting to mongoDB getVendor');
-      }
-      const db = client.db(dbName);
-      db.collection('chats').findOneAndUpdate({'name':id},{$set:{unread:false}}).then((value) => {
-        resolve(value);
-      })
-    })
-  });
-}
 
 
 
