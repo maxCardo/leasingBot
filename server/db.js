@@ -140,23 +140,6 @@ const newChat = (record) => {
   });
 }
 
-
-const getChat = (id) => {
-  return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
-      if (err) {
-      return console.log('Error: problem connecting to mongoDB getVendor');
-      }
-      const db = client.db(dbName);
-      db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{unread:false}}).then((value) => {
-        resolve(value);
-      })
-    })
-  });
-}
-
-
-
 // // ---------------------------get all records where service type matches-------------------------------------
 // const getVendor = (location, serviceType) => {
 //   return new Promise((resolve, reject) => {
