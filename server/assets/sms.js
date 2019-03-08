@@ -1,7 +1,8 @@
 
 const config = require('./../config/keys')
-
 const client = require('twilio')(config.twlsid, config.twlAuthToken);
+
+const {availabilityLink} = require('./availability');
 
 
 const sendSMS= (to,body) => {
@@ -15,4 +16,12 @@ const sendSMS= (to,body) => {
   .done();
 }
 
-module.exports = {sendSMS};
+const sendFirstSMS = (data) => {
+  const templet = `
+    Thank you for your interest in ${data.property}. Would you like to schedual a time to see the place?
+    \nPlease use the link below to check our availbility and schedual.\n${availabilityLink[data.property]}
+  `
+  sendSMS(data.phoneNumber, templet);
+}
+
+module.exports = {sendSMS, sendFirstSMS};

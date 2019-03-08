@@ -21,6 +21,14 @@ users =[];
 connections =[];
 
 //------------------------------ Routs -------------------------------------//
+//Lead coming in from gmail email parse
+app.post('/newLead', (req, res) => {
+  db.newLead(req.body).then((value) => {
+    sms.sendFirstSMS(value.value);
+    updateConvoBar();
+  });
+  res.status(200).send();
+});
 
 //Lead coming in from gmail email parse
 app.post('/newLead', (req, res) => {
@@ -33,7 +41,6 @@ app.post('/sms', async (req, res) => {
   await updateChat(data.From, data.Body, 'User-SMS');
   updateConvoBar();
   botRespond(data.Body, data.From);
-  await console.log('sending status');
   res.status(200).send();
 });
 
@@ -67,6 +74,10 @@ io.sockets.on('connection', (socket) => {
     db.getChat(id).then((record) => {
       socket.username = record.phoneNumber;
       updateConvoBar();
+<<<<<<< HEAD
+=======
+      console.log('load convo record: ', record);
+>>>>>>> c95bd79756a35389b13264da6ed05d2b85860507
       io.sockets.emit('load convo', record);
     })
   })
