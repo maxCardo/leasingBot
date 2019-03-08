@@ -29,7 +29,7 @@ $(function () {
       if (data[i].unread === true) {
         unread = 'style= "font-weight: bold";'
       }
-      html += `<li id="convo" class="list-group-item" ${unread}>${data[i].name}</li>`;
+      html += `<li id="convo" class="list-group-item" ${unread}>${data[i].phoneNumber}</li>`;
     };
     $users.html(html);
 

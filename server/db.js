@@ -94,7 +94,7 @@ const getChat = (id) => {
       return console.log('Error: problem connecting to mongoDB getVendor');
       }
       const db = client.db(dbName);
-      db.collection('chats').findOneAndUpdate({'name':id},{$set:{unread:false}}).then((value) => {
+      db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{unread:false}}).then((value) => {
         resolve(value);
       })
     })

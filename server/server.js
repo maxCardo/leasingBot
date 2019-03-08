@@ -43,7 +43,7 @@ app.post('/sms', async (req, res) => {
 io.sockets.on('connection', (socket) => {
   connections.push(socket);
   console.log('conected %s sockets connected', connections.length);
-  db.getAllChats().then((chats) => updateConvoBar(chats));
+  updateConvoBar();
 
   //Disconnect UI`
   socket.on('disconnect', (data) => {
@@ -65,8 +65,8 @@ io.sockets.on('connection', (socket) => {
   //loads main chat when selected from sidebar chats list
   socket.on('get convo', (id) => {
     db.getChat(id).then((record) => {
-      socket.username = record.name;
-      db.getAllChats().then((chats) => updateConvoBar(chats));
+      socket.username = record.phoneNumber;
+      updateConvoBar();
       io.sockets.emit('load convo', record);
     })
   })
