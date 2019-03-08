@@ -74,10 +74,6 @@ io.sockets.on('connection', (socket) => {
     db.getChat(id).then((record) => {
       socket.username = record.phoneNumber;
       updateConvoBar();
-<<<<<<< HEAD
-=======
-      console.log('load convo record: ', record);
->>>>>>> c95bd79756a35389b13264da6ed05d2b85860507
       io.sockets.emit('load convo', record);
     })
   })

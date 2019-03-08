@@ -141,7 +141,6 @@ const newChat = (record) => {
 }
 
 
-<<<<<<< HEAD
 const getChat = (id) => {
   return new Promise((resolve, reject) => {
     MongoClient.connect(dataBase, (err, client) => {
@@ -156,8 +155,6 @@ const getChat = (id) => {
   });
 }
 
-=======
->>>>>>> c95bd79756a35389b13264da6ed05d2b85860507
 
 
 // // ---------------------------get all records where service type matches-------------------------------------
