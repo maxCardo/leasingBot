@@ -22,6 +22,7 @@ const newLead = (record) => {
         $set:{
           name:record.name,
           email:record.email,
+          unread: true,
         },
         $push: {
           actionLog:{
