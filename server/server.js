@@ -23,7 +23,9 @@ connections =[];
 //------------------------------ Routs -------------------------------------//
 //Lead coming in from gmail email parse
 app.post('/newLead', (req, res) => {
-  console.log(req.body);
+  db.newLead(req.body).then((value) => {
+    sms.sendFirstSMS(value.value);
+  });
   res.status(200).send();
 });
 

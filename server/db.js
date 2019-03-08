@@ -5,7 +5,41 @@ const dataBase = process.env.MONGODB_URI;
 const databaseUrlSplit = dataBase.split('/');
 const dbName = databaseUrlSplit[3];
 
+//custom db call for new leads from email parse
+const newLead = (record) => {
+  return new Promise(function(resolve, reject) {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB');
+      }
+      const db = client.db(dbName);
+      const phoneNumber = `+1${record.phoneNumber.replace(/[\s () -]/g, '')}`;
 
+      db.collection('chats').findOneAndUpdate({
+        phoneNumber: phoneNumber,
+        property: record.property
+      },{
+        $set:{
+          name:record.name,
+          email:record.email,
+        },
+        $push: {
+          actionLog:{
+            action:'emailParse lead',
+            date:new Date(),
+          },
+        }
+      },{
+        upsert:true,
+        returnNewDocument:true,
+        returnOriginal: false
+      }).then((res) => {
+        resolve(res);
+      });
+    });
+    //resolve();
+  });
+};
 
 const updateChat = (id, record, from) => {
   return new Promise(function(resolve, reject) {
@@ -16,7 +50,7 @@ const updateChat = (id, record, from) => {
       const db = client.db(dbName);
 
       db.collection('chats').findOneAndUpdate({
-        name: id
+        phoneNumber: id
       },{
         $set:{
           unread: true,
@@ -153,4 +187,4 @@ const getServiceOrder = (ID) => {
 
 
 
-module.exports = {newChat, getAllChats, updateChat, getChat};
+module.exports = {newChat, getAllChats, updateChat, getChat, newLead};
