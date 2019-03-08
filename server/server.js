@@ -30,6 +30,12 @@ app.post('/newLead', (req, res) => {
   res.status(200).send();
 });
 
+//Lead coming in from gmail email parse
+app.post('/newLead', (req, res) => {
+  console.log(req.body);
+  res.status(200).send();
+});
+
 app.post('/sms', async (req, res) => {
   const data = req.body;
   await updateChat(data.From, data.Body, 'User-SMS');
@@ -37,6 +43,7 @@ app.post('/sms', async (req, res) => {
   botRespond(data.Body, data.From);
   res.status(200).send();
 });
+
 
 //------------------------------ Sockets.on -------------------------------------//
 
