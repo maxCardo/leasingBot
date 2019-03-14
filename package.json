@@ -4,11 +4,11 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start":"node server/server",
+    "start": "node server/server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "engine":{
-    "node":"10.4.0"
+  "engine": {
+    "node": "10.4.0"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "express": "^4.16.4",
     "mongodb": "^3.1.13",
     "path": "^0.12.7",
+    "request-promise": "^4.2.4",
     "socket.io": "^2.2.0",
     "twilio": "^3.28.1"
   }

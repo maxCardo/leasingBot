@@ -9,6 +9,7 @@ const io = require('socket.io').listen(server);
 const bot = require('./assets/bot')
 const db = require('./db');
 const sms = require('./assets/sms');
+const {postSlack} = require('./assets/slack');
 
 const publicPath = path.join(__dirname, '../public');
 
@@ -30,9 +31,10 @@ app.post('/newLead', (req, res) => {
   res.status(200).send();
 });
 
-//Lead coming in from gmail email parse
-app.post('/newLead', (req, res) => {
+//sends message to slack channal when error accures on google script
+app.post('/postSlack', (req, res) => {
   console.log(req.body);
+  postSlack(req.body);
   res.status(200).send();
 });
 

@@ -7,5 +7,6 @@ module.exports = {
   googleClientEmail: process.env.GOOGLE_CLIENT_EMAIL_TARA,
   googlePrivateKey: JSON.parse(process.env.GOOGLE_PRIVATE_KEY_TARA),
   twlsid: process.env.TWLS_ID,
-  twlAuthToken: process.env.TWL_AUTH_TOKEN
+  twlAuthToken: process.env.TWL_AUTH_TOKEN,
+  slackWebHook: process.env.SLACK_WEBHOOK
 };
