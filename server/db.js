@@ -129,6 +129,36 @@ const botOnOff = (id) => {
   });
 }
 
+const botFail = (id) => {
+  return new Promise(function(resolve, reject) {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB');
+      }
+      const db = client.db(dbName);
+
+      db.collection('chats').findOneAndUpdate({
+        phoneNumber: id
+      },{
+        $set:{
+          botOn: false
+        },
+        $push: {
+          chats: {
+            from: 'Admin',
+            message:'NLP Fail bot off, fail notice sent via slack',
+            Date: new Date
+          },
+        }
+      },{
+        returnNewDocument:true,
+        returnOriginal: false
+      }).then((res) => resolve(res));
+    });
+  });
+};
+
+
 //create new chat
 const newChat = (record) => {
   return new Promise(function(resolve, reject) {
@@ -207,4 +237,4 @@ const getServiceOrder = (ID) => {
 
 
 
-module.exports = {newChat, getAllChats, updateChat, getChat, newLead, botOnOff};
+module.exports = {newChat, getAllChats, updateChat, getChat, newLead, botOnOff, botFail};

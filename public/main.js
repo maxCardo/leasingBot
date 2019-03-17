@@ -14,8 +14,6 @@ $(function () {
 
   socket.on('refresh chat', (data) => {
     const openChat = $('#chatDetails')[0].innerHTML;
-    console.log('openChat:', openChat);
-    console.log('phoneNumber: ', data.num);
     if (openChat === data.num) {
       postRerfreshChat(data.user, data.msg);
       scrollToBottom();
@@ -114,6 +112,11 @@ $(function () {
     $chat.append(`<div id = "messageDiv" class="well"><strong>${chat[chat.length-1].from}:</strong><br/>${chat[chat.length-1].message} <span id="timeStamp">${time}</span></div>`);
     scrollToBottom();
   })
+
+  socket.on('botOff', (record) => {
+    console.log(record.value.chats);
+    $('#botBtn').addClass('btn-danger');
+  });
 
 
 });

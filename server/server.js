@@ -21,7 +21,12 @@ app.use(bodyParser.urlencoded({extended: false}));
 users =[];
 connections =[];
 
-//------------------------------ Routs -------------------------------------//
+app.get('/dashboard', (req, res) => {
+  res.sendFile(`${publicPath}/dashboard.html`);
+});
+
+
+//------------------------------ Post Routs -------------------------------------//
 //Lead coming in from gmail email parse
 app.post('/newLead', (req, res) => {
   db.newLead(req.body).then((value) => {
@@ -148,7 +153,7 @@ const botRespond = async(text, number) => {
   let response =  responseObj[0].queryResult.fulfillmentText;
   if (responseObj[0].queryResult.action === 'input.unknown') {
     console.log('input unknown');
-    db.updateChat(number, 'NLP Fail, Error message sent via Slack','Admin');
+    db.botFail(number).then((record) => io.sockets.emit('botOff', record));
     postSlack({text: `NLP Fail: ${number}`});
   }else {
     console.log('input known');
