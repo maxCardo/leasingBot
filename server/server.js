@@ -54,6 +54,12 @@ app.post('/sms', (req, res) => {
   res.status(200).send();
 });
 
+app.post('/Dialogflow', (req, res) => {
+  console.log(req.body);
+  res.status(200).send();
+});
+
+
 
 //------------------------------ Sockets.on -------------------------------------//
 
@@ -140,12 +146,19 @@ const botRespond = async(text, number) => {
   const delay = delayArr[Math.floor(Math.random()*7)];
   let responseObj = await bot.textQuery(text);
   let response =  responseObj[0].queryResult.fulfillmentText;
-  db.updateChat(number, response, 'Tara').then(() => {
-    setTimeout(() => {
-      io.sockets.emit('refresh chat', {num:number ,msg: response , user:'Tara'});
-      sms.sendSMS(number, response);
-    }, delay);
-  });
+  if (responseObj[0].queryResult.action === 'input.unknown') {
+    console.log('input unknown');
+    db.updateChat(number, 'NLP Fail, Error message sent via Slack','Admin');
+    postSlack({text: `NLP Fail: ${number}`});
+  }else {
+    console.log('input known');
+    db.updateChat(number, response, 'Tara').then(() => {
+      setTimeout(() => {
+        io.sockets.emit('refresh chat', {num:number ,msg: response , user:'Tara'});
+        sms.sendSMS(number, response);
+      }, delay);
+    });
+  }
 };
 
 //------------------------------- deployment -------------------------------//
