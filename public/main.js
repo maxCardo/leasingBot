@@ -14,7 +14,9 @@ $(function () {
 
   socket.on('refresh chat', (data) => {
     const openChat = $('#chatDetails')[0].innerHTML;
-    if (openChat === data.phoneNumber) {
+    console.log('openChat:', openChat);
+    console.log('phoneNumber: ', data.num);
+    if (openChat === data.num) {
       postRerfreshChat(data.user, data.msg);
       scrollToBottom();
     }else {
@@ -89,6 +91,7 @@ $(function () {
   //switched emit on botRespond to 'post refresh'
 
   socket.on('load convo', (data) => {
+    console.log(data.value.botOn);
     $('#chatDetails').html(data.value.phoneNumber)
     const chat = data.value.chats;
     for (var i = 0; i < chat.length; i++) {
@@ -96,6 +99,11 @@ $(function () {
       $chat.append(`<div id = "messageDiv" class="well"><strong>${chat[i].from}:</strong><br/>${chat[i].message}<span id="timeStamp">${time}</span></div>`);
       scrollToBottom();
     }
+    if (data.value.botOn === false){
+      $('#botBtn').toggleClass('btn-danger');
+      console.log(data.value.botOn);
+    };
+    $('.msgBtn').prop('disabled', false);
   })
 
 
@@ -159,6 +167,8 @@ $(document).ready(() => {
   $('#botBtn').on('click', () => {
     const openChat = $('#chatDetails')[0].innerHTML;
     console.log('botBtn hit', openChat);
+    $('#botBtn').toggleClass('btn-danger');
+    socket.emit('botOnOff', openChat);
   });
 
 });

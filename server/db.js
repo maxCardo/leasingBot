@@ -60,7 +60,6 @@ const updateChat = (id, record, from) => {
       },{
         $set:{
           unread: true,
-          botRespond:false,
           last_active:new Date
         },
         $push: {
@@ -75,7 +74,7 @@ const updateChat = (id, record, from) => {
         returnNewDocument:true,
         returnOriginal: false
       }).then((res) => {
-        resolve();
+        resolve(res);
       });
     });
     //resolve();
@@ -107,6 +106,24 @@ const getChat = (id) => {
       const db = client.db(dbName);
       db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{unread:false}}).then((value) => {
         resolve(value);
+      })
+    })
+  });
+}
+
+const botOnOff = (id) => {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB getVendor');
+      }
+      const db = client.db(dbName);
+      db.collection('chats').findOne({'phoneNumber':id}).then((value) => {
+        if (value.botOn === false) {
+            db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{botOn:true}}).then((value) => resolve(value));
+        } else {
+          db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{botOn:false}}).then((value) => resolve(value));
+        }
       })
     })
   });
@@ -190,4 +207,4 @@ const getServiceOrder = (ID) => {
 
 
 
-module.exports = {newChat, getAllChats, updateChat, getChat, newLead};
+module.exports = {newChat, getAllChats, updateChat, getChat, newLead, botOnOff};

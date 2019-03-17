@@ -38,11 +38,19 @@ app.post('/postSlack', (req, res) => {
   res.status(200).send();
 });
 
-app.post('/sms', async (req, res) => {
+app.post('/sms', (req, res) => {
   const data = req.body;
-  await updateChat(data.From, data.Body, 'User-SMS');
-  updateConvoBar();
-  botRespond(data.Body, data.From);
+  db.updateChat(data.From, data.Body, 'User-SMS').then((record) => {
+    io.sockets.emit('refresh chat', {num:data.From, msg:data.Body, user:'User-SMS'});
+    console.log('bot on? : ',record.value.botOn);
+    if (record.value.botOn !== false) {
+      console.log('botOn');
+      botRespond(data.Body, data.From);
+    }else {
+      console.log('bot off');
+    }
+    updateConvoBar();
+  });
   res.status(200).send();
 });
 
@@ -84,6 +92,13 @@ io.sockets.on('connection', (socket) => {
     db.getChat(id).then((record) => {
       io.sockets.emit('post refresh', record);
     });
+  })
+
+  socket.on('botOnOff', (record) => {
+    console.log('socket on bot on/off fired. record: ', record);
+    db.botOnOff(record).then((value) => {
+      console.log('LOGGING FROM SOCKET ON: ',value);
+    })
   })
 
   // // updates sidebar user names. not used on UI/sms deployment
