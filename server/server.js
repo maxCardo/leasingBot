@@ -22,7 +22,7 @@ users =[];
 connections =[];
 
 app.get('/dashboard', (req, res) => {
-  res.sendFile(`${publicPath}/dashboard.html`);
+  res.sendFile(`${publicPath}/views/dashboard.html`);
 });
 
 
@@ -72,6 +72,7 @@ io.sockets.on('connection', (socket) => {
   connections.push(socket);
   console.log('conected %s sockets connected', connections.length);
   updateConvoBar();
+  loadDash();
 
   //Disconnect UI`
   socket.on('disconnect', (data) => {
@@ -138,6 +139,12 @@ const updateChat = (number, message, user) => {
   db.updateChat(number, message, user ).then(() => {
     io.sockets.emit('refresh chat', {num:number, msg:message, user:user});
   });
+};
+
+const loadDash = () => {
+  db.getAllChats().then((record) => {
+    io.sockets.emit('loadDash', record);
+  })
 };
 
 const updateConvoBar = () => {
