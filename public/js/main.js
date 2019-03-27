@@ -9,6 +9,7 @@ var $userForm = $('#userForm');
 var $users = $('#users');
 var $username = $('#username');
 
+
 //--------------------------- Scoket IO Functions -----------------------------//
 $(function () {
 
@@ -147,6 +148,16 @@ const postRerfreshChat = (user,msg) => {
 //-----------------------------event listners----------------------------------//
 //submit form when enter key is hit within the text area
 $(document).ready(() => {
+  var utm = window.location.search.substring(1);
+  var number = /\+[0-9]{11}/;
+  var result = number.test(utm);
+
+  if (utm !== '' && result === true) {
+    socket.emit('get convo', utm);
+  }
+
+
+
   $('#message').keypress(function (e) {
     if (e.which == 13) {
       $('#sendMessageBtn').click();

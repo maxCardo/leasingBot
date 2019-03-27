@@ -43,6 +43,7 @@ app.post('/postSlack', (req, res) => {
   res.status(200).send();
 });
 
+//new sms message
 app.post('/sms', (req, res) => {
   const data = req.body;
   db.updateChat(data.From, data.Body, 'User-SMS').then((record) => {
@@ -64,6 +65,35 @@ app.post('/Dialogflow', (req, res) => {
   res.status(200).send();
 });
 
+//----------------------------Form Routes ---------------------------------------//
+app.post('/schForm', (req, res) => {
+  console.log(req.body);
+  db.updateSch(req.body.phoneNumber, req.body.schDate).then(() => {
+    res.sendFile(`${publicPath}/views/dashboard.html`);
+  });
+});
+
+app.post('/tourForm', (req, res) => {
+  console.log(req.body);
+  db.updateTour(req.body).then(() => {
+     res.sendFile(`${publicPath}/views/dashboard.html`);
+   });
+});
+
+
+app.post('/appForm', (req, res) => {
+  console.log(req.body);
+   db.updateApp(req.body).then(() => {
+  });
+  res.sendFile(`${publicPath}/views/dashboard.html`);
+});
+
+app.post('/arcForm', (req, res) => {
+  console.log(req.body);
+   db.updateArc(req.body).then(() => {
+  });
+  res.sendFile(`${publicPath}/views/dashboard.html`);
+});
 
 
 //------------------------------ Sockets.on -------------------------------------//
@@ -142,7 +172,7 @@ const updateChat = (number, message, user) => {
 };
 
 const loadDash = () => {
-  db.getAllChats().then((record) => {
+  db.getActiveLeads().then((record) => {
     io.sockets.emit('loadDash', record);
   })
 };

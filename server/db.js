@@ -97,6 +97,21 @@ const getAllChats = () => {
   });
 }
 
+const getActiveLeads = () => {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+      return console.log('Error: problem connecting to mongoDB getVendor');
+      }
+      const db = client.db(dbName);
+      db.collection('chats').find({active:{$ne:false}}).sort({last_active:-1}).toArray((err, res) => {
+        if (err) throw err;
+        resolve(res);
+      })
+    })
+  });
+}
+
 const getChat = (id) => {
   return new Promise((resolve, reject) => {
     MongoClient.connect(dataBase, (err, client) => {
@@ -187,6 +202,63 @@ const newChat = (record) => {
   });
 }
 
+//UI icon Routes
+const updateSch = (id, schDate) => {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB getVendor');
+      }
+      const db = client.db(dbName);
+      db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{schDate:schDate}}).then(() => resolve());
+    })
+  });
+}
+
+const updateTour = (data) => {
+  console.log('data:', data);
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB getVendor');
+      }
+      const db = client.db(dbName);
+      db.collection('chats').findOneAndUpdate({'phoneNumber':data.phoneNumber},{$set:{
+        tourRes:data.tourRes,
+        tourInterest: data.intrLvl
+      }}).then(() => resolve());
+    })
+  });
+}
+
+const updateApp = (data) => {
+  console.log('data:', data);
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB getVendor');
+      }
+      const db = client.db(dbName);
+      db.collection('chats').findOneAndUpdate({'phoneNumber':data.phoneNumber},{$set:{
+        application:data.app,
+        appStatus: data.appStatus
+      }}).then(() => resolve());
+    })
+  });
+}
+
+const updateArc = (data) => {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(dataBase, (err, client) => {
+      if (err) {
+        return console.log('Error: problem connecting to mongoDB getVendor');
+      }
+      const db = client.db(dbName);
+      db.collection('chats').findOneAndUpdate({'phoneNumber':data.phoneNumber},{$set:{active:false,reasonForNoIntr:data.reasonForArc}}).then(() => resolve());
+    })
+  });
+}
+
 // // ---------------------------get all records where service type matches-------------------------------------
 // const getVendor = (location, serviceType) => {
 //   return new Promise((resolve, reject) => {
@@ -237,4 +309,4 @@ const getServiceOrder = (ID) => {
 
 
 
-module.exports = {newChat, getAllChats, updateChat, getChat, newLead, botOnOff, botFail};
+module.exports = {newChat, getAllChats, updateChat, getChat, newLead, botOnOff, botFail, updateSch, updateTour, updateApp, updateArc, getActiveLeads};
