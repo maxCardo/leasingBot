@@ -76,7 +76,7 @@ socket.on('loadDash', (record) => {
       <td>${record[i].tourInterest}</td>
       <td>${record[i].application}</td>
       <td>${record[i].appStatus}</td>
-      <td id="chatIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="#" link-number = "1"><span class="fas fa-sms"></span></a></td>
+      <td id="chatIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="/?${record[i].phoneNumber}" link-number = "1"><span class="fas fa-sms"></span></a></td>
       <td id="calIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="#" link-number = "1"><span class="fas fa-calendar-alt"></span></a></td>
       <td id="tourIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-eye"></span></a></td>
       <td id="appIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-file-signature"></span></a></td>

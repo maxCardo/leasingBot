@@ -54,6 +54,7 @@ app.post('/sms', (req, res) => {
       botRespond(data.Body, data.From);
     }else {
       console.log('bot off');
+      postSlack({text: `New Mesage from: ${data.From}\n\nhttps://morning-citadel-89026.herokuapp.com/?${data.From}`});
     }
     updateConvoBar();
   });
