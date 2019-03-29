@@ -96,6 +96,13 @@ app.post('/arcForm', (req, res) => {
   res.sendFile(`${publicPath}/views/dashboard.html`);
 });
 
+//------------------------------ API Routs -------------------------------------//
+
+app.get('/openLeads', (req,res) => {
+  db.getActiveLeads().then((record) => {
+    res.send({record});
+  });
+});
 
 //------------------------------ Sockets.on -------------------------------------//
 
