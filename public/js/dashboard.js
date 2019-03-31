@@ -42,6 +42,7 @@ const loadLeadsFilter = (searchString) => {
       $.each(leads.record, (i,lead) => {
 
         let name = lead.name;
+        let phoneNumber = lead.phoneNumber
         let compString = searchString.toUpperCase();
 
         try {
@@ -49,7 +50,7 @@ const loadLeadsFilter = (searchString) => {
         } catch (e) {
         }
 
-        if (name && name.includes(compString)) {
+        if (name && name.includes(compString) || phoneNumber && phoneNumber.includes(compString)) {
           html += `
           <tr id = "lead">
           <td>${lead.name}</td>
