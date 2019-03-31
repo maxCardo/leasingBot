@@ -1,7 +1,87 @@
 
-var socket = io.connect();
+$(function () {
+  var socket = io.connect();
+  loadLeads()
+  //$('#openLeadTable').DataTable();
+  $('#datetimepicker1').datetimepicker();
+});
+
+const loadLeads = () => {
+  let html = '';
+  $.ajax({url: '/openLeads',success: (leads) => {
+      $.each(leads.record, (i,lead) => {
+        html += `
+          <tr id = "lead">
+            <td>${lead.name}</td>
+            <td>${lead.phoneNumber}</td>
+            <td>'first contact'</td>
+            <td>${lead.last_active}</td>
+            <td>${lead.schDate}</td>
+            <td>${lead.tourRes}</td>
+            <td>${lead.tourInterest}</td>
+            <td>${lead.application}</td>
+            <td>${lead.appStatus}</td>
+            <td id="chatIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="/?${lead.phoneNumber}" link-number = "1"><span class="fas fa-sms"></span></a></td>
+            <td id="calIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="#" link-number = "1"><span class="fas fa-calendar-alt"></span></a></td>
+            <td id="tourIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-eye"></span></a></td>
+            <td id="appIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-file-signature"></span></a></td>
+            <td id="arcIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-skull-crossbones"></span></a></td>
+          </tr>
+        `;
+      });
+      $('#tbody').html(html)
+    }
+  })
+}
+
+const loadLeadsFilter = (searchString) => {
+  let html = '';
+  let log = false
+
+  $.ajax({url: '/openLeads',success: (leads) => {
+      $.each(leads.record, (i,lead) => {
+
+        let name = lead.name;
+        let compString = searchString.toUpperCase();
+
+        try {
+          name = name.toUpperCase();
+        } catch (e) {
+        }
+
+        if (name && name.includes(compString)) {
+          html += `
+          <tr id = "lead">
+          <td>${lead.name}</td>
+          <td>${lead.phoneNumber}</td>
+          <td>'first contact'</td>
+          <td>${lead.last_active}</td>
+          <td>${lead.schDate}</td>
+          <td>${lead.tourRes}</td>
+          <td>${lead.tourInterest}</td>
+          <td>${lead.application}</td>
+          <td>${lead.appStatus}</td>
+          <td id="chatIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="/?${lead.phoneNumber}" link-number = "1"><span class="fas fa-sms"></span></a></td>
+          <td id="calIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="#" link-number = "1"><span class="fas fa-calendar-alt"></span></a></td>
+          <td id="tourIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-eye"></span></a></td>
+          <td id="appIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-file-signature"></span></a></td>
+          <td id="arcIcon" data-id = "${lead.phoneNumber}" data-name = "${lead.name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-skull-crossbones"></span></a></td>
+          </tr>
+          `;
+        }
+      });
+      $('#tbody').html(html)
+    }
+  })
+}
 
 // ==============================event listers==================================//
+
+//searchBox
+$('#searchBox').on('input', () => {
+  let value = $('#searchBox').val();
+  loadLeadsFilter(value);
+})
 
 //click outside modal to close
 $(window).on('click', (e) => {
@@ -20,7 +100,6 @@ $('.closeBtn').on('click', (e) => {
 
 //click icons to bring up models
 $('#tbody').on('click','#calIcon', (e) => {
-  console.log('calIcon',e.currentTarget.dataset.id, e.currentTarget.dataset.name, e.currentTarget.dataset.appt);
   $('.IDInput').val(e.currentTarget.dataset.id);
   $('.prospectName').val(e.currentTarget.dataset.name);
   $('#schModal').css({"display": "block"});
@@ -47,47 +126,4 @@ $('#tbody').on('click','#appIcon', (e) => {
 $('#tbody').on('click','#arcIcon', (e) => {
   $('.IDInput').val(e.currentTarget.dataset.id);
   $('#arcModal').css({"display": "block"});
-});
-
-// $('#schSubmitBtn').on('click', (e) => {
-//   e.preventDefault();
-//   console.log(e);
-// });
-
-// $('#schForm').submit((e) => {
-//   e.preventDefault();
-//   console.log(e);
-// })
-
-// ==============================Socket Calls==================================//
-
-socket.on('loadDash', (record) => {
-  let html = '';
-  for (var i = 0; i < record.length; i++) {
-    var dataString = JSON.stringify(record[i]);
-    html += `
-    <tr id = "lead">
-      <td>${record[i].name}</td>
-      <td>${record[i].phoneNumber}</td>
-      <td>'first contact'</td>
-      <td>${record[i].last_active}</td>
-      <td>${record[i].schDate}</td>
-      <td>${record[i].tourRes}</td>
-      <td>${record[i].tourInterest}</td>
-      <td>${record[i].application}</td>
-      <td>${record[i].appStatus}</td>
-      <td id="chatIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="/?${record[i].phoneNumber}" link-number = "1"><span class="fas fa-sms"></span></a></td>
-      <td id="calIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="#" link-number = "1"><span class="fas fa-calendar-alt"></span></a></td>
-      <td id="tourIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-eye"></span></a></td>
-      <td id="appIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-file-signature"></span></a></td>
-      <td id="arcIcon" data-id = "${record[i].phoneNumber}" data-name = "${record[i].name}" data-appt = "insert appt"> <a href="#"><span class="fas fa-skull-crossbones"></span></a></td>
-    </tr>
-    `;
-  }
-  $('#tbody').html(html)
-});
-
-// date picker JS
-$(function() {
-  $('#datetimepicker1').datetimepicker();
 });
