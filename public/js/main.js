@@ -177,7 +177,6 @@ $(document).ready(() => {
     $('#chat').empty();
   });
 
-  // not wired yet: chat bot on/off handeler.
   $('#botBtn').on('click', () => {
     const openChat = $('#chatDetails')[0].innerHTML;
     console.log('botBtn hit', openChat);

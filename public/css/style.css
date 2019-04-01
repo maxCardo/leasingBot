@@ -106,3 +106,18 @@ html, body{
   padding: 8px;
   margin: 2px;
 }
+
+/*  sort icons*/
+.sortIconDiv{
+  float: right;
+  margin-right: 8px;
+  margin-bottom: 0px;
+}
+.sortIcon{
+  position: absolute;
+}
+
+.disabledLink{
+  pointer-events: none;
+  color: grey;
+}
