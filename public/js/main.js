@@ -146,6 +146,18 @@ const postRerfreshChat = (user,msg) => {
 }
 
 //-----------------------------event listners----------------------------------//
+//show chat menue on small viewpoert
+$('#chatMenu').on('click', () => {
+  $('#sidebar').css({"display":"block"})
+});
+
+//click x to close
+$('#chatCloseBtn').on('click', (e) => {
+  e.preventDefault();
+  $('#sidebar').css({"display":"none"})
+  $('#chatMenu').css({"display":"block"})
+});
+
 //submit form when enter key is hit within the text area
 $(document).ready(() => {
   var utm = window.location.search.substring(1);

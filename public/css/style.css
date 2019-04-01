@@ -5,26 +5,13 @@
 }
 
 html, body{
-  margin: 10px;
-  height: 100%;
-}
-
-
-/* uncomment after dev
- #messageArea{
-  display: none
-} */
-
-
-/*  erase after dev*/
-#userFormArea{
-  display: none
+  margin: 5px;
+  height: 98%
 }
 
 #main{
   height: 100%;
 }
-
 
 #messageArea{
   height: 100%;
@@ -33,9 +20,21 @@ html, body{
 #sidebar{
   height: 100%;
 }
+#sidebarHead{
+  height: 10%
+}
 
 #innerSidebar{
-  height: 100%;
+  height: 90%;
+  overflow: auto;
+
+}
+#chatMenu{
+  display: none;
+}
+
+#chatCloseBtn{
+  display: none;
 }
 
 #chat{
@@ -120,4 +119,29 @@ html, body{
 .disabledLink{
   pointer-events: none;
   color: grey;
+}
+
+/*  Table styling*/
+.tableDiv{
+
+}
+
+@media only screen and (max-width:1000px) {
+  #sidebar{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    width: 70%;
+    height: 96%;
+  }
+
+  #chatMenu{
+    display: block;
+    float: left;
+    margin: 4px
+  }
+
+  #chatCloseBtn{
+    display: block;
+  }
 }
