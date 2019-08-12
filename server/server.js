@@ -214,7 +214,7 @@ const botRespond = async(text, number) => {
 //------------------------------- deployment -------------------------------//
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 server.listen(port, () => {
   console.log(`chatbot app is up on port ${port}`);
 });

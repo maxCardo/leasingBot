@@ -6,14 +6,16 @@ const {availabilityLink} = require('./availability');
 
 
 const sendSMS= (to,body) => {
-  client.messages
-  .create({
-    body: body,
-    from:'+14124447505',
-    to: to
-  })
-  .then(message => console.log(message.sid))
-  .done();
+  // client.messages
+  // .create({
+  //   body: body,
+  //   from:'+14124447505',
+  //   to: to
+  // })
+  // .then(message => console.log(message.sid))
+  // .done();
+
+  console.log('sending sms');
 }
 
 const sendFirstSMS = (data) => {
