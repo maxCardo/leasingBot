@@ -8,7 +8,7 @@ const dbName = databaseUrlSplit[3];
 //custom db call for new leads from email parse
 const newLead = (record) => {
   return new Promise(function(resolve, reject) {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase, { useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB');
       }
@@ -49,7 +49,7 @@ const newLead = (record) => {
 
 const updateChat = (id, record, from) => {
   return new Promise(function(resolve, reject) {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB');
       }
@@ -84,7 +84,7 @@ const updateChat = (id, record, from) => {
 //grab all chats for sidebar on load
 const getAllChats = () => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
       return console.log('Error: problem connecting to mongoDB getVendor');
       }
@@ -99,7 +99,7 @@ const getAllChats = () => {
 
 const getActiveLeads = () => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
       return console.log('Error: problem connecting to mongoDB getVendor');
       }
@@ -114,7 +114,7 @@ const getActiveLeads = () => {
 
 const getChat = (id) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB getVendor');
       }
@@ -128,7 +128,7 @@ const getChat = (id) => {
 
 const botOnOff = (id) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB getVendor');
       }
@@ -146,7 +146,7 @@ const botOnOff = (id) => {
 
 const botFail = (id) => {
   return new Promise(function(resolve, reject) {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB');
       }
@@ -177,7 +177,7 @@ const botFail = (id) => {
 //create new chat
 const newChat = (record) => {
   return new Promise(function(resolve, reject) {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB');
       }
@@ -205,7 +205,7 @@ const newChat = (record) => {
 //UI icon Routes
 const updateSch = (id, schDate) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB getVendor');
       }
@@ -234,7 +234,7 @@ const updateTour = (data) => {
 const updateApp = (data) => {
   console.log('data:', data);
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB getVendor');
       }
@@ -249,7 +249,7 @@ const updateApp = (data) => {
 
 const updateArc = (data) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
         return console.log('Error: problem connecting to mongoDB getVendor');
       }
@@ -279,7 +279,7 @@ const updateArc = (data) => {
 // -------------------------------get one vendor that matches service type ---------------------------------------
 const getVendor = (serviceType) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
       if (err) {
       return console.log('Error: problem connecting to mongoDB getVendor');
       }
@@ -294,7 +294,7 @@ const getVendor = (serviceType) => {
 
 const getServiceOrder = (ID) => {
   return new Promise((resolve, reject) => {
-    MongoClient.connect(dataBase, (err, client) => {
+    MongoClient.connect(dataBase,{ useNewUrlParser: true },  (err, client) => {
       if (err) {
       return console.log('Error: problem connecting to mongoDB getServiceOrder');
       }
