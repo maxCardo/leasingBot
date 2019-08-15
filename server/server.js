@@ -29,6 +29,7 @@ app.get('/dashboard', (req, res) => {
 //------------------------------ Post Routs -------------------------------------//
 //Lead coming in from gmail email parse
 app.post('/newLead', (req, res) => {
+  console.log('newLead fired');
   db.newLead(req.body).then((value) => {
     sms.sendFirstSMS(value.value);
     updateConvoBar();

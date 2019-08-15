@@ -2,8 +2,7 @@ const {MongoClient, ObjectID} = require('mongodb');
 const creds = require('./config/keys');
 
 const dataBase = process.env.MONGODB_URI;
-const databaseUrlSplit = dataBase.split('/');
-const dbName = databaseUrlSplit[3];
+const dbName = 'Leasing_CRM';
 
 //custom db call for new leads from email parse
 const newLead = (record) => {
@@ -310,3 +309,12 @@ const getServiceOrder = (ID) => {
 
 
 module.exports = {newChat, getAllChats, updateChat, getChat, newLead, botOnOff, botFail, updateSch, updateTour, updateApp, updateArc, getActiveLeads};
+
+
+
+//
+// mongodb+srv://user:mcgtech2018@cluster0-yxud9.mongodb.net/rethinkPM?retryWrites=true&w=majority
+//
+// mongodb+srv://user:mcgtech2018@cluster0-yxud9.mongodb.net/rethinkPM?retryWrites=true
+
+//mongodb://heroku_xzw9cn8g:ck90mo2lg7pp8ronp45aosu2kp@ds123151.mlab.com:23151/heroku_xzw9cn8g
