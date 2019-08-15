@@ -12,7 +12,11 @@ const newLead = (record) => {
         return console.log('Error: problem connecting to mongoDB');
       }
       const db = client.db(dbName);
-      const phoneNumber = `+1${record.phoneNumber.replace(/[\s () -]/g, '')}`;
+      let phoneNumber = '';
+
+      if (record.phoneNumber) {
+       phoneNumber = `+1${record.phoneNumber.replace(/[\s () -]/g, '')}`;
+      }
 
       db.collection('chats').findOneAndUpdate({
         phoneNumber: phoneNumber,
@@ -309,12 +313,3 @@ const getServiceOrder = (ID) => {
 
 
 module.exports = {newChat, getAllChats, updateChat, getChat, newLead, botOnOff, botFail, updateSch, updateTour, updateApp, updateArc, getActiveLeads};
-
-
-
-//
-// mongodb+srv://user:mcgtech2018@cluster0-yxud9.mongodb.net/rethinkPM?retryWrites=true&w=majority
-//
-// mongodb+srv://user:mcgtech2018@cluster0-yxud9.mongodb.net/rethinkPM?retryWrites=true
-
-//mongodb://heroku_xzw9cn8g:ck90mo2lg7pp8ronp45aosu2kp@ds123151.mlab.com:23151/heroku_xzw9cn8g
