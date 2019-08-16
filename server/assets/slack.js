@@ -9,11 +9,7 @@ const hook = config.slackWebHook;
 // post to slack
 
 const postSlack = (record) => {
- console.log('record on slack call', record);
-
-  const slackBody = {
-    text: record.text,
-  }
+  const slackBody = {text: record.text}
 
   request({
     url:`https://hooks.slack.com/services/${hook}`,

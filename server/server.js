@@ -44,6 +44,18 @@ app.post('/postSlack', (req, res) => {
   res.status(200).send();
 });
 
+app.post('/calandly', (req, res) => {
+  console.log('calandly api fired');
+  try {
+    const {event, payload:{event_type: {name},event:{start_time_pretty},invitee}} = req.body;
+    postSlack({text: `${event}\nProperty: ${name}.\nProspect: ${invitee.name} \nDate/Time: ${start_time_pretty}`});
+    res.status(200).send('success');
+  } catch (e) {
+    res.status(500).send('server error');
+    postSlack({text: `Error cal API:  ${e}`});
+  }
+});
+
 //new sms message
 app.post('/sms', (req, res) => {
   const data = req.body;
