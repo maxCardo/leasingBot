@@ -47,6 +47,7 @@ const newLead = (record) => {
     });
     //resolve();
   });
+};
 
 const updateChat = (id, record, from) => {
   return new Promise(function(resolve, reject) {
