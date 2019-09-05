@@ -47,7 +47,7 @@ const newLead = (record) => {
     });
     //resolve();
   });
-  MongoClient.close();
+};
 
 
 const updateChat = (id, record, from) => {
