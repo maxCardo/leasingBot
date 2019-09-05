@@ -49,6 +49,7 @@ const newLead = (record) => {
   });
   MongoClient.close();
 
+
 const updateChat = (id, record, from) => {
   return new Promise(function(resolve, reject) {
     MongoClient.connect(dataBase,{ useNewUrlParser: true }, (err, client) => {
