@@ -47,7 +47,7 @@ const newLead = (record) => {
     });
     //resolve();
   });
-};
+;
 
 
 const updateChat = (id, record, from) => {
