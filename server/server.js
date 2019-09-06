@@ -17,7 +17,7 @@ app.use(express.static(publicPath));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-
+crashe()
 users =[];
 connections =[];
 
