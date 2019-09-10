@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 users =[];
 connections =[];
-
+crash();
 
 app.get('/dashboard', (req, res) => {
   res.sendFile(`${publicPath}/views/dashboard.html`);
