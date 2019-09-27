@@ -59,7 +59,9 @@ app.post('/calandly', (req, res) => {
 //new sms message
 app.post('/sms', (req, res) => {
   const data = req.body;
+  console.log(data);
   db.updateChat(data.From, data.Body, 'User-SMS').then((record) => {
+    console.log(record);
     io.sockets.emit('refresh chat', {num:data.From, msg:data.Body, user:'User-SMS'});
     console.log('bot on? : ',record.value.botOn);
     if (record.value.botOn !== false) {

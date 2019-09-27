@@ -45,8 +45,6 @@ const newLead = (record) => {
         resolve(res);
       });
     });
-
-    resolve();
   });
 };
 
@@ -81,8 +79,6 @@ const updateChat = (id, record, from) => {
         resolve(res);
       });
     });
-
-    resolve();
   });
 };
 
@@ -98,7 +94,7 @@ const getAllChats = () => {
         if (err) throw err;
         resolve(res);
       })
-  
+
     })
   });
 }
@@ -114,7 +110,7 @@ const getActiveLeads = () => {
         if (err) throw err;
         resolve(res);
       })
-  
+
     })
   });
 }
@@ -129,7 +125,7 @@ const getChat = (id) => {
       db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{unread:false}}).then((value) => {
         resolve(value);
       })
-  
+
     })
   });
 }
@@ -148,7 +144,7 @@ const botOnOff = (id) => {
           db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{botOn:false}}).then((value) => resolve(value));
         }
       })
-  
+
     })
 
   });
@@ -179,7 +175,7 @@ const botFail = (id) => {
         returnNewDocument:true,
         returnOriginal: false
       }).then((res) => resolve(res));
-  
+
     });
   });
 };
@@ -209,7 +205,7 @@ const newChat = (record) => {
           });
         }
       })
-  
+
     });
   });
 }
@@ -223,7 +219,7 @@ const updateSch = (id, schDate) => {
       }
       const db = client.db(dbName);
       db.collection('chats').findOneAndUpdate({'phoneNumber':id},{$set:{schDate:schDate}}).then(() => resolve());
-  
+
     })
   });
 }
@@ -240,7 +236,7 @@ const updateTour = (data) => {
         tourRes:data.tourRes,
         tourInterest: data.intrLvl
       }}).then(() => resolve());
-  
+
     })
   });
 }
@@ -257,7 +253,7 @@ const updateApp = (data) => {
         application:data.app,
         appStatus: data.appStatus
       }}).then(() => resolve());
-  
+
     })
   });
 }
@@ -270,7 +266,7 @@ const updateArc = (data) => {
       }
       const db = client.db(dbName);
       db.collection('chats').findOneAndUpdate({'phoneNumber':data.phoneNumber},{$set:{active:false,reasonForNoIntr:data.reasonForArc}}).then(() => resolve());
-  
+
     })
   });
 }
@@ -304,7 +300,7 @@ const getVendor = (serviceType) => {
       db.collection('vendors').findOne({'skillSet':{[serviceType]: true}}).then((value) => {
         resolve(value);
       })
-  
+
     })
   });
 }
@@ -320,7 +316,7 @@ const getServiceOrder = (ID) => {
       db.collection('firstReq').findOne({_id:new ObjectID(ID)}).then((value) => {
         resolve(value);
       })
-  
+
     })
   });
 }
