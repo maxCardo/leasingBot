@@ -20,7 +20,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 users =[];
 connections =[];
 
-kapow()
 
 app.get('/dashboard', (req, res) => {
   res.sendFile(`${publicPath}/views/dashboard.html`);
